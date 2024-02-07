@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <androidx.camera.view.PreviewView
+        android:id="@+id/camera_source_preview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.example.absen_pegawai.helpers.vision.GraphicOverlay
+        android:id="@+id/graphic_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/testImageView"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/some_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/camera_source_preview"
+        android:layout_marginTop="10dp"
+        android:text="Tempatkan Wajah di layar"
+        android:textSize="24sp"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:fontFamily="@font/roboto_bold"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/some_text"
+        android:layout_marginTop="10dp"
+        android:text="Pastikan muncul kotak di sekitar wajah"
+        android:textSize="16sp"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:fontFamily="@font/roboto"/>
+
+    <ImageButton
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:id="@+id/exitImageButton"
+        android:onClick="onCancelBtnClick"
+        android:layout_width="50dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_height="50dp"
+        android:src="@drawable/baseline_edit_off_24"
+        app:tint="@color/white"
+        android:background="@drawable/custom_cancel_button"
+        android:scaleType="fitCenter"
+        android:padding="10dp" />
+
+    <ImageButton
+        android:id="@+id/saveImageButton"
+        android:layout_marginBottom="10dp"
+        android:onClick="saveData"
+        android:padding="8dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/baseline_camera_24"
+        app:tint="@color/white"
+        android:background="@drawable/custom_button"
+        app:layout_constraintBottom_toBottomOf="@id/camera_source_preview"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

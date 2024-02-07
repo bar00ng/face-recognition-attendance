@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ShowUserActivity"
+    android:gravity="center|top"
+    android:paddingTop="20dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="User Info"
+        android:textSize="24sp"
+        android:paddingHorizontal="20dp"
+        android:fontFamily="@font/roboto_bold"
+        android:textStyle="bold"
+        android:textColor="@color/black" />
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="8dp"
+        android:elevation="20dp"
+        android:layout_marginVertical="10dp"
+        android:layout_marginHorizontal="20dp">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/nikContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/nikLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_bold"
+                android:text="NIK \t: "
+                android:textSize="15sp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/nikTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/nikLabel"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textSize="15sp"
+                android:text="nikTextView"
+                android:fontFamily="@font/roboto"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/namaLabel"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_bold"
+                android:text="NAMA \t: "
+                android:textSize="15sp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@id/namaTextView"
+                app:layout_constraintTop_toBottomOf="@id/nikLabel" />
+            <TextView
+                android:id="@+id/namaTextView"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/namaLabel"
+                app:layout_constraintTop_toBottomOf="@id/nikTextView"
+                android:text="namaTextView"
+                android:textSize="15sp"
+                android:fontFamily="@font/roboto"
+                android:textColor="@color/black" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="20dp"
+        android:text="Data Absen"
+        android:textSize="24sp"
+        android:fontFamily="@font/roboto_bold"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_marginBottom="10dp" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/userAttendanceRecylerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>

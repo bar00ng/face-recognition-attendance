@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="8dp"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    android:layout_marginVertical="10dp"
+    android:layout_marginHorizontal="8dp"
+    android:elevation="20dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/namaText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:ellipsize="end"
+            android:fontFamily="@font/roboto_bold"
+            android:maxLines="1"
+            android:text="username"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/nikLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/namaText"
+            android:text="NIK :"
+            android:textStyle="bold"
+            android:fontFamily="@font/roboto_bold"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:layout_marginRight="5dp"/>
+
+        <TextView
+            android:id="@+id/nikText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/namaText"
+            android:layout_toEndOf="@id/nikLabel"
+            android:fontFamily="@font/roboto"
+            android:text="E-mail User"
+            android:textSize="15sp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/nikLabel"
+            android:text="Click to see details, Hold to open menu"
+            android:textStyle="italic"
+            android:fontFamily="@font/roboto_light_italic"/>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

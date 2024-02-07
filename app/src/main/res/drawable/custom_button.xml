@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/purple_500" /> <!-- Warna latar belakang putih -->
+    <corners android:radius="100dp" /> <!-- Jari-jari sudut sehingga membentuk lingkaran (nilai besar seperti 100dp dapat membuatnya terlihat seperti lingkaran) -->
+    <stroke android:color="#000000" android:width="4dp" /> <!-- Warna hitam untuk border setebal 2dp -->
+</shape>
