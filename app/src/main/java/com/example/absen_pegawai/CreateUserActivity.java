@@ -19,16 +19,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
 
 public class CreateUserActivity extends AppCompatActivity{
     private static final String TAG = "CreateUserActivity";
     TextInputEditText nameInput, nikInput, passwordInput;
     ProgressBar progressBar;
     Button submitBtn;
-
-    // Firebase
-    private FirebaseStorage storage = FirebaseStorage.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,11 +56,6 @@ public class CreateUserActivity extends AppCompatActivity{
                 }
             }
         });
-    }
-
-    // Function untuk show Toast
-    private void showToast(String text) {
-        Toast.makeText(this, text, Toast.LENGTH_LONG).show();
     }
 
     // Function tambah user baru

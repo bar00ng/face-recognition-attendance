@@ -37,6 +37,7 @@ public class AttendanceAdapter extends FirestoreRecyclerAdapter<Attendance, Atte
 
         holder.tanggalTextView.setText(absenId);
         holder.jamMasukTextView.setText(model.getJam_masuk());
+        holder.jamKeluarTextView.setText(model.getJam_keluar());
     }
 
     @NonNull
@@ -53,11 +54,12 @@ public class AttendanceAdapter extends FirestoreRecyclerAdapter<Attendance, Atte
 
     class AttendanceHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener,
             MenuItem.OnMenuItemClickListener{
-        TextView tanggalTextView, jamMasukTextView;
+        TextView tanggalTextView, jamMasukTextView, jamKeluarTextView;
         public AttendanceHolder(@NonNull View itemView) {
             super(itemView);
             tanggalTextView = itemView.findViewById(R.id.tanggalAbsen);
             jamMasukTextView = itemView.findViewById(R.id.jam_masuk);
+            jamKeluarTextView = itemView.findViewById(R.id.jam_keluar);
 
             itemView.setOnCreateContextMenuListener(this);
         }

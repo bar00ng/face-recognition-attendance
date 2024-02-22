@@ -47,9 +47,6 @@ dependencies {
     // Picasso
     implementation 'com.squareup.picasso:picasso:2.8'
 
-    // Circle Image View
-    implementation 'de.hdodenhof:circleimageview:3.1.0'
-
     // Import the Firebase BoM
     implementation platform('com.google.firebase:firebase-bom:32.7.1')
 
@@ -59,9 +56,6 @@ dependencies {
 
     // FirebaseUI for Cloud Firestore
     implementation 'com.firebaseui:firebase-ui-firestore:8.0.2'
-
-    // FirebaseUI for Cloud Storage
-    implementation 'com.firebaseui:firebase-ui-storage:8.0.2'
 
     // Google ML Kit
     implementation 'com.google.mlkit:face-detection:16.1.5'

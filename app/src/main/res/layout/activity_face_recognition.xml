@@ -18,15 +18,13 @@
     <androidx.camera.view.PreviewView
         android:id="@+id/camera_source_preview"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintDimensionRatio="1:1"
+        android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.example.absen_pegawai.helpers.vision.GraphicOverlay
         android:id="@+id/graphic_overlay"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintDimensionRatio="1:1"
+        android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView

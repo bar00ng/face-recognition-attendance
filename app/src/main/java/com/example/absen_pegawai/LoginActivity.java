@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,7 +29,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputEditText nikInput, passwordInput;
     private Button loginBtn;
     private ProgressBar loginProgress;
-//    private TextView signUpLink;
+    private TextView signUpLink;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
@@ -40,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         passwordInput = findViewById(R.id.passwordInput);
         loginBtn = findViewById(R.id.signInButton);
         loginProgress = findViewById(R.id.loginProgress);
-//        signUpLink = findViewById(R.id.signUpLink);
+        signUpLink = findViewById(R.id.signUpLink);
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,12 +50,12 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-//        signUpLink.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                openSignUp();
-//            }
-//        });
+        signUpLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openSignUp();
+            }
+        });
     }
 
     private void loginProcess() {
@@ -89,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                                     if (roleName.equals(Role.ADMIN)) {
                                         openListUserActivity(userId);
                                     } else if (roleName.equals(Role.USER)) {
-                                        checkAttendanceStatus(userId);
+                                        openUserHomeActivity(userId);
                                     }
                                 } else {
                                     Log.w(TAG, "Dokumen tidak ditemukan");
@@ -119,8 +120,8 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-    private void openFaceRecognitionActivity(String userId) {
-        Intent intent = new Intent(this, FaceRecognitionActivity.class);
+    private void openUserHomeActivity(String userId) {
+        Intent intent = new Intent(this, UserHomeActivity.class);
         intent.putExtra("userId", userId);
         startActivity(intent);
         finish();
@@ -131,44 +132,9 @@ public class LoginActivity extends AppCompatActivity {
         toast.show();
     }
 
-//    private void openSignUp() {
-//        Intent intent = new Intent(this, SignUpActivity.class);
-//        startActivity(intent);
-//    }
-
-    private void checkAttendanceStatus(String userId) {
-        LocalDate currentDate = LocalDate.now();
-        int year = currentDate.getYear();
-        int month = currentDate.getMonthValue();
-        int dayOfMonth = currentDate.getDayOfMonth();
-
-        String monthInString = Month.of(month).name();
-
-        String absenId = dayOfMonth + " " + monthInString + " " + year;
-
-        // Mengecek apakah dokumen absensi sudah ada untuk hari ini
-        db.collection("Users")
-                .document(userId)
-                .collection("data_absensi")
-                .document(absenId)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot documentSnapshot = task.getResult();
-
-                            if (documentSnapshot.exists()) {
-                                showToast("Kamu sudah absen hari ini");
-                            } else {
-                                openFaceRecognitionActivity(userId);
-                            }
-                        } else {
-                            Log.w(TAG, "Terjadi kesalahan saat memeriksa absensi: " + task.getException().getMessage());
-                            showToast("Gagal memeriksa absensi.");
-                        }
-                    }
-                });
+    private void openSignUp() {
+        Intent intent = new Intent(this, SignUpActivity.class);
+        startActivity(intent);
     }
 
     private void toggleProgressBar() {

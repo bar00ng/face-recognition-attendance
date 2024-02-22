@@ -30,7 +30,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/longitudeLabel"
+            android:id="@+id/jamMasukLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tanggalAbsen"
@@ -46,7 +46,30 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tanggalAbsen"
-            android:layout_toEndOf="@id/longitudeLabel"
+            android:layout_toEndOf="@id/jamMasukLabel"
+            android:fontFamily="@font/roboto"
+            android:text="00:00"
+            android:textSize="15sp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/jamKeluarLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/jamMasukLabel"
+            android:text="Jam Keluar : "
+            android:textStyle="bold"
+            android:fontFamily="@font/roboto_bold"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:layout_marginRight="5dp"/>
+
+        <TextView
+            android:id="@+id/jam_keluar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/jam_masuk"
+            android:layout_toEndOf="@id/jamKeluarLabel"
             android:fontFamily="@font/roboto"
             android:text="00:00"
             android:textSize="15sp"
@@ -56,7 +79,7 @@
             android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/jam_masuk"
+            android:layout_below="@id/jam_keluar"
             android:text="Hold to open menu"
             android:textStyle="italic"
             android:fontFamily="@font/roboto_light_italic"/>

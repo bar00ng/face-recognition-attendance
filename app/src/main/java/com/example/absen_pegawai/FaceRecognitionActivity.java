@@ -16,7 +16,9 @@ import com.example.absen_pegawai.helpers.vision.VisionBaseProcessor;
 import com.example.absen_pegawai.helpers.vision.recogniser.FaceRecognitionProcessor;
 import com.example.absen_pegawai.model.Attendance;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.mlkit.vision.face.Face;
@@ -29,7 +31,9 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 
 public class FaceRecognitionActivity extends MLVideoHelperActivity implements FaceRecognitionProcessor.FaceRecognitionCallback {
@@ -42,6 +46,7 @@ public class FaceRecognitionActivity extends MLVideoHelperActivity implements Fa
     private float[] faceVector;
 
     private String userId;
+    private boolean isMasuk;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -50,6 +55,7 @@ public class FaceRecognitionActivity extends MLVideoHelperActivity implements Fa
         super.onStart();
 
         userId = getIntent().getStringExtra("userId");
+        isMasuk = getIntent().getBooleanExtra("isMasuk", false);
     }
 
     @Override
@@ -80,7 +86,7 @@ public class FaceRecognitionActivity extends MLVideoHelperActivity implements Fa
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu:
-                logout();
+                openLoginActivity();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -107,6 +113,8 @@ public class FaceRecognitionActivity extends MLVideoHelperActivity implements Fa
             double officeLongitude = Office.LONGITUDE;
             double officeLatitude = Office.LATITUDE;
 
+            Log.d(TAG, "ALAMAT - " + addresNow);
+
             double distanceThreshold = Office.DISTANCE_TRESHOLD;
 
             double distanceToOffice = calculateDistance(latitudeNow, longitudeNow, officeLatitude, officeLongitude);
@@ -120,12 +128,6 @@ public class FaceRecognitionActivity extends MLVideoHelperActivity implements Fa
         } else {
             showToast("Kamu bukan orang yang sama");
         }
-    }
-
-    void logout() {
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-        finish();
     }
 
     public void setTestImage(Bitmap cropToBBox) {
@@ -150,10 +152,12 @@ public class FaceRecognitionActivity extends MLVideoHelperActivity implements Fa
         String absenId = dayOfMonth + " " + monthInString + " " + year;
         String timeNow = getCurrentTimeIn24HourFormat();
 
+        String collectionName = isMasuk ? "data_absensi_masuk" : "data_absensi_keluar";
+
         // Mengecek apakah dokumen absensi sudah ada untuk hari ini
         db.collection("Users")
                 .document(userId)
-                .collection("data_absensi")
+                .collection(collectionName)
                 .document(absenId)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -166,8 +170,7 @@ public class FaceRecognitionActivity extends MLVideoHelperActivity implements Fa
                                 insertAttendance(
                                         dayOfMonth, month,
                                         year, longitude,
-                                        latitude, addressNow,
-                                        city, country,
+                                        latitude,
                                         timeNow, absenId
                                 );
                             }
@@ -180,38 +183,81 @@ public class FaceRecognitionActivity extends MLVideoHelperActivity implements Fa
     };
 
     void insertAttendance(
-            int tgl_masuk, int bulan_masuk,
-            int tahun_masuk, double longitude,
-            double latitude, String addressNow,
-            String city, String country,
-            String jam_masuk, String absenId
+            int tgl, int bulan,
+            int tahun, double longitude,
+            double latitude,
+            String jam, String absenId
     ) {
-        Attendance absensi = new Attendance(
-                longitude, latitude,
-                jam_masuk, addressNow,
-                country, city,
-                tgl_masuk, bulan_masuk,
-                tahun_masuk
-        );
+        String fieldPrefix = isMasuk ? "_masuk" : "_keluar";
 
-        db.collection("Users").document(userId)
-                .collection("data_absensi").document(absenId)
-                .set(absensi)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            openLoginActivity();
-                            showToast("Data absen berhasil disimpan");
-                        } else {
-                            showToast("Gagal menyimpan data absen");
-                        }
+        Map<String, Object> absensi = new HashMap<>();
+        absensi.put("longitude" + fieldPrefix, longitude);
+        absensi.put("latitude" + fieldPrefix, latitude);
+        absensi.put("jam" + fieldPrefix, jam);
+        absensi.put("tgl" + fieldPrefix, tgl);
+        absensi.put("bulan" + fieldPrefix, bulan);
+        absensi.put("tahun" + fieldPrefix, tahun);
+
+        // Perform the Firestore operation
+        DocumentReference absensiRef = db.collection("Users").document(userId)
+                .collection("data_absensi").document(absenId);
+
+        absensiRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        // Document exists, update its data
+                        absensiRef.update(absensi)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            openLoginActivity();
+                                            showToast("Data absen berhasil disimpan");
+                                        } else {
+                                            showToast("Gagal menyimpan data absen");
+                                        }
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        // Handle failure
+                                        System.err.println("Error saat mencatat waktu masuk ke Firestore: " + e.getMessage());
+                                    }
+                                });
+                    } else {
+                        // Document doesn't exist, set its data
+                        absensiRef.set(absensi)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            openLoginActivity();
+                                            showToast("Data absen berhasil disimpan");
+                                        } else {
+                                            showToast("Gagal menyimpan data absen");
+                                        }
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        // Handle failure
+                                        System.err.println("Error saat mencatat waktu masuk ke Firestore: " + e.getMessage());
+                                    }
+                                });
                     }
-                })
-                .addOnFailureListener(e -> {
-                    // Gagal menyimpan data
-                    System.err.println("Error saat mencatat waktu masuk ke Firestore: " + e.getMessage());
-                });
+                } else {
+                    // Handle failure
+                    showToast("Gagal memeriksa dokumen absensi");
+                    Log.e(TAG, "Error getting document", task.getException());
+                }
+            }
+        });
+
     }
 
     void openLoginActivity() {

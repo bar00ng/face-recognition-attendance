@@ -322,7 +322,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="file:$USER_HOME$/Library/Android/sdk/icons/material/materialicons/download/baseline_download_24.xml" />
+                                      <entry key="url" value="file:$USER_HOME$/Android/Sdk/icons/material/materialicons/picture_as_pdf/baseline_picture_as_pdf_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -332,7 +332,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="baseline_download_24" />
+                            <entry key="outputName" value="baseline_picture_as_pdf_24" />
                           </map>
                         </option>
                       </PersistentState>
