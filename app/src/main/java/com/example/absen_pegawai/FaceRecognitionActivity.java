@@ -14,7 +14,6 @@ import com.example.absen_pegawai.enums.Office;
 import com.example.absen_pegawai.helpers.MLVideoHelperActivity;
 import com.example.absen_pegawai.helpers.vision.VisionBaseProcessor;
 import com.example.absen_pegawai.helpers.vision.recogniser.FaceRecognitionProcessor;
-import com.example.absen_pegawai.model.Attendance;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;

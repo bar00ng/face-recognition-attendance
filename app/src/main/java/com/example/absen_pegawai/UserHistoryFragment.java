@@ -1,21 +1,17 @@
 package com.example.absen_pegawai;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.absen_pegawai.adapter.AttendanceAdapter;
-import com.example.absen_pegawai.adapter.UserAdapter;
-import com.example.absen_pegawai.enums.Role;
 import com.example.absen_pegawai.model.Attendance;
-import com.example.absen_pegawai.model.User;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;

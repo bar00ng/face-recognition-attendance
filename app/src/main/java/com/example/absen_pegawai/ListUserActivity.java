@@ -3,7 +3,11 @@ package com.example.absen_pegawai;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -11,8 +15,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,7 +40,7 @@ public class ListUserActivity extends AppCompatActivity implements UserAdapter.O
     private static final String TAG = "ListUserActivity";
     private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 1000;
     private static final int REQUEST_READ_EXTERNAL_STORAGE = 1020;
-
+    private static final int STORAGE_PERMISSION_CODE = 23;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference usersCollection = db.collection("Users");
     private UserAdapter adapter;
@@ -54,6 +63,8 @@ public class ListUserActivity extends AppCompatActivity implements UserAdapter.O
         });
 
         setUpRecyclerView();
+
+        requestForStoragePermissions();
     }
 
     @Override
@@ -108,23 +119,75 @@ public class ListUserActivity extends AppCompatActivity implements UserAdapter.O
         adapter.stopListening();
     }
 
-    private void downloadReport() {
-        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
-                checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this, "Generating Report...", Toast.LENGTH_SHORT).show();
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == STORAGE_PERMISSION_CODE){
+            if(grantResults.length > 0){
+                boolean write = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                boolean read = grantResults[1] == PackageManager.PERMISSION_GRANTED;
 
-            Report report = new Report(this);
-            report.generateAbsensiReport();
-        } else {
-            // Jika salah satu atau kedua izin belum diberikan, minta izin
-            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_EXTERNAL_STORAGE);
-            }
-            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_READ_EXTERNAL_STORAGE);
+                if(read && write){
+                    Toast.makeText(ListUserActivity.this, "Storage Permissions Granted", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(ListUserActivity.this, "Storage Permissions Denied", Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
+
+    private void downloadReport() {
+        Report report = new Report(this);
+        report.generateAbsensiReport();
+    }
+
+    private void requestForStoragePermissions() {
+        //Android is 11 (R) or above
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
+            try {
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                Uri uri = Uri.fromParts("package", this.getPackageName(), null);
+                intent.setData(uri);
+                storageActivityResultLauncher.launch(intent);
+            }catch (Exception e){
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                storageActivityResultLauncher.launch(intent);
+            }
+        }else{
+            //Below android 11
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE
+                    },
+                    STORAGE_PERMISSION_CODE
+            );
+        }
+    }
+
+    private ActivityResultLauncher<Intent> storageActivityResultLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                    new ActivityResultCallback<ActivityResult>(){
+
+                        @Override
+                        public void onActivityResult(ActivityResult o) {
+                            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
+                                //Android is 11 (R) or above
+                                if(Environment.isExternalStorageManager()){
+                                    //Manage External Storage Permissions Granted
+                                    Log.d(TAG, "onActivityResult: Manage External Storage Permissions Granted");
+                                }else{
+                                    Toast.makeText(ListUserActivity.this, "Storage Permissions Denied", Toast.LENGTH_SHORT).show();
+                                }
+                            }else{
+                                //Below android 11
+
+                            }
+                        }
+                    });
 
     void logout() {
         Intent intent = new Intent(this, LoginActivity.class);
