@@ -22,6 +22,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,8 +39,6 @@ import com.google.firebase.firestore.Query;
 
 public class ListUserActivity extends AppCompatActivity implements UserAdapter.OnItemClickListener {
     private static final String TAG = "ListUserActivity";
-    private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 1000;
-    private static final int REQUEST_READ_EXTERNAL_STORAGE = 1020;
     private static final int STORAGE_PERMISSION_CODE = 23;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference usersCollection = db.collection("Users");
@@ -64,7 +63,9 @@ public class ListUserActivity extends AppCompatActivity implements UserAdapter.O
 
         setUpRecyclerView();
 
-        requestForStoragePermissions();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && !Environment.isExternalStorageManager()) {
+            requestForStoragePermissions();
+        }
     }
 
     @Override
